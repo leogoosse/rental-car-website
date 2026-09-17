@@ -331,13 +331,12 @@ body {
 }
 
 /* Box individual colour fills
-   One analogous violet → indigo → blue family so the grid
-   reads as a single moodboard instead of scattered hues.
-   Garnet stays as the sole warm accent, echoing the tag
-   pills and headlight glow rather than fighting them. */
-.box-purple   { background: rgba(88,  28, 135, 0.70); }  /* royal purple  #581C87 */
-.box-blue     { background: rgba(30,  58, 138, 0.74); }  /* deep blue     #1E3A8A */
-.box-indigo   { background: rgba(55,  48, 163, 0.68); }  /* true indigo   #3730A3 */
-.box-teal     { background: rgba(30,  27,  75, 0.76); }  /* near-black indigo #1E1B4B */
-.box-violet   { background: rgba(109, 40, 217, 0.62); }  /* bright violet #6D28D9 */
-.box-darkred  { background: rgba(107, 16,  41, 0.72); }  /* garnet / oxblood #6B1029 */
+   Strictly one violet → indigo → blue family, no red and
+   no teal/green anywhere — only depth and brightness vary
+   from box to box, so the grid reads as a single moodboard. */
+.box-purple   { background: rgba(88,  28, 135, 0.72); }  /* purple-900 #581C87 */
+.box-blue     { background: rgba(30,  58, 138, 0.76); }  /* blue-800   #1E3A8A */
+.box-indigo   { background: rgba(55,  48, 163, 0.70); }  /* indigo-800 #3730A3 */
+.box-teal     { background: rgba(49,  46, 129, 0.78); }  /* indigo-900 #312E81 */
+.box-violet   { background: rgba(109, 40, 217, 0.64); }  /* violet-700 #6D28D9 */
+.box-darkred  { background: rgba(76,  29, 149, 0.74); }  /* violet-900 #4C1D95 */
