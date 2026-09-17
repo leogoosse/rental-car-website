@@ -30,10 +30,11 @@
     <div class="nav-logo">NAME</div>
 
     <div class="nav-center">
-      <a href="#"  class="nav-link active">Home</a>
+      <a href="#home"  class="nav-link active">Home</a>
       <a href="#rent-a-car"  class="nav-link">Rent a Car</a>
       <a href="#"  class="nav-link">My Bookings</a>
       <a href="#"  class="nav-link">Contact</a>
+      <span class="nav-indicator"></span>
     </div>
 
     <div class="nav-right">
@@ -55,7 +56,7 @@
   <main class="page-content">
 
     <!-- HERO — info boxes centred over the car -->
-    <section class="hero">
+    <section class="hero" id="home">
 
       <div class="hero-intro">
         <div class="hero-eyebrow">The RS6, In The Room With You</div>
@@ -184,13 +185,50 @@
   </main>
 
   <script>
-    // Active nav link
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function () {
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
+    // Active nav link + sliding indicator, driven by scroll position
+    // so it follows you between Home and Rent a Car automatically —
+    // not just on click.
+    (function () {
+      const links = Array.from(document.querySelectorAll('.nav-link'));
+      const indicator = document.querySelector('.nav-indicator');
+      const sections = links
+        .filter(link => link.getAttribute('href').length > 1)
+        .map(link => ({ link, section: document.querySelector(link.getAttribute('href')) }))
+        .filter(entry => entry.section);
+
+      function moveIndicator(link) {
+        if (!link) { indicator.style.opacity = '0'; return; }
+        indicator.style.opacity = '1';
+        indicator.style.left = (link.offsetLeft + link.offsetWidth / 2 - 8) + 'px';
+      }
+
+      function setActive(link) {
+        links.forEach(l => l.classList.remove('active'));
+        if (link) link.classList.add('active');
+        moveIndicator(link);
+      }
+
+      // Click = instant feedback, no waiting for the scroll to settle
+      links.forEach(link => {
+        link.addEventListener('click', () => setActive(link));
       });
-    });
+
+      // Scroll-spy: whichever section crosses the middle of the
+      // viewport becomes the active nav link.
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const match = sections.find(s => s.section === entry.target);
+            if (match) setActive(match.link);
+          }
+        });
+      }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+
+      sections.forEach(({ section }) => observer.observe(section));
+
+      setActive(document.querySelector('.nav-link.active') || links[0]);
+      window.addEventListener('resize', () => moveIndicator(document.querySelector('.nav-link.active')));
+    })();
   </script>
 
 </body>
