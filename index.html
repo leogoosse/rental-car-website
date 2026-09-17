@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAME — Premium Car Rental</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!--
+    ╔══════════════════════════════════════════════════╗
+    ║  FIXED BACKGROUND SYSTEM                         ║
+    ║  Three layers stacked behind everything.         ║
+    ║  The page scrolls; these layers never move.      ║
+    ║                                                  ║
+    ║  To swap the car photo:                          ║
+    ║  → edit .bg-photo background-image in styles.css ║
+    ╚══════════════════════════════════════════════════╝
+  -->
+  <div class="bg-photo"></div>
+  <div class="bg-darkroom"></div>
+  <div class="bg-lights"></div>
+  <div class="bg-tint"></div>
+
+  <!-- ═══════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-logo">NAME</div>
+
+    <div class="nav-center">
+      <a href="#"  class="nav-link active">Home</a>
+      <a href="#"  class="nav-link">Rent a Car</a>
+      <a href="#"  class="nav-link">My Bookings</a>
+      <a href="#"  class="nav-link">Contact</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="#" class="nav-profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        My Profile
+      </a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       SCROLLABLE CONTENT
+       Everything sits on top of the fixed bg.
+  ═══════════════════════════════════════ -->
+  <main class="page-content">
+
+    <!-- HERO — info boxes centred over the car -->
+    <section class="hero">
+
+      <div class="hero-intro">
+        <div class="hero-eyebrow">The RS6, In The Room With You</div>
+        <h1>Make Your Dream Come True.</h1>
+        <p>One car, one spotlight, zero compromise. Scroll to see what's waiting for you.</p>
+      </div>
+
+      <div class="boxes-grid">
+
+        <div class="info-box box-purple">
+          <div class="tag">Premium Fleet</div>
+          <h3>Luxury at Every Turn</h3>
+          <p>Our fleet includes the finest high-performance vehicles on the market. From the RS6 Avant to the Porsche Panamera — drive what you've always dreamed of.</p>
+        </div>
+
+        <div class="info-box box-blue">
+          <div class="tag">Instant Booking</div>
+          <h3>Reserve in Under 2 Minutes</h3>
+          <p>Select your car, pick your dates, confirm. No hidden fees, no paperwork — effortless from first click to ignition key.</p>
+        </div>
+
+        <div class="info-box box-indigo">
+          <div class="tag">24 / 7 Support</div>
+          <h3>Always on Standby</h3>
+          <p>Our concierge team is available around the clock. Wherever your journey takes you, we make sure everything runs perfectly.</p>
+        </div>
+
+        <div class="info-box box-teal">
+          <div class="tag">Transparent Pricing</div>
+          <h3>No Surprises — Ever</h3>
+          <p>What you see is what you pay. Premium rates with no fine print, because real luxury shouldn't come with hidden conditions.</p>
+        </div>
+
+        <div class="info-box box-violet">
+          <div class="tag">Performance</div>
+          <h3>630 hp on Demand</h3>
+          <p>Quattro AWD. 0–100 km/h in 3.4 s. The RS6 is engineered for those who want it all — and so is our service.</p>
+        </div>
+
+        <div class="info-box box-darkred">
+          <div class="tag">Now Available</div>
+          <h3>RS Models in Stock</h3>
+          <p>The RS6, RS7, and RS e-tron GT are live in our fleet right now. Availability is limited — reserve yours before it's gone.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!--
+      Future sections (Rent a Car, Bookings, etc.)
+      go here. They will sit on the same continuous
+      dark-room background automatically.
+    -->
+
+  </main>
+
+  <script>
+    // Active nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function () {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
