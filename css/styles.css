@@ -348,3 +348,170 @@ body {
 .box-teal     { background: rgba(49,  46, 129, 0.78); }  /* indigo-900 #312E81 */
 .box-violet   { background: rgba(109, 40, 217, 0.64); }  /* violet-700 #6D28D9 */
 .box-darkred  { background: rgba(76,  29, 149, 0.74); }  /* violet-900 #4C1D95 */
+
+/* ══════════════════════════════════════
+   RENT A CAR — fleet grid
+══════════════════════════════════════ */
+.fleet {
+  padding: 16vh 80px 22vh;
+}
+
+.fleet-intro {
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 9vh;
+}
+
+.fleet-intro h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: #fff;
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.8);
+  margin: 16px 0;
+}
+
+.fleet-intro p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(226, 232, 240, 0.78);
+}
+
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.car-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(14, 10, 24, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 14px 50px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.car-media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.car-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.05);
+  transition: transform 0.5s ease;
+}
+
+.car-card:hover .car-media img {
+  transform: scale(1.05);
+}
+
+.car-body {
+  padding: 26px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.car-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.car-top h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.2px;
+}
+
+.car-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  gap: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.car-specs li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.car-specs strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.car-specs span {
+  font-size: 0.68rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.car-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.car-price {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.car-price strong {
+  font-size: 1.15rem;
+  color: #fff;
+  font-weight: 700;
+  margin-right: 3px;
+}
+
+.car-cta {
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 9px;
+  background: linear-gradient(115deg, #7C3AED 0%, #4F46E5 100%);
+  box-shadow: 0 6px 22px rgba(124, 58, 237, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.car-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.5);
+}
+
+@media (max-width: 980px) {
+  .fleet-grid { grid-template-columns: 1fr; }
+  .fleet { padding: 12vh 24px 16vh; }
+}
