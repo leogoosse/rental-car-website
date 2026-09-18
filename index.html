@@ -185,6 +185,17 @@
   </main>
 
   <script>
+    // Always land on the homepage on a fresh visit — even if the
+    // URL carries a stale #rent-a-car (e.g. a bookmark saved while
+    // scrolled down) or the browser tries to restore old scroll.
+    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+    window.addEventListener('load', function () {
+      window.scrollTo(0, 0);
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    });
+  </script>
+
+  <script>
     // Active nav link + sliding indicator, driven by scroll position
     // so it follows you between Home and Rent a Car automatically —
     // not just on click.
