@@ -881,6 +881,19 @@ body {
   box-shadow: 0 8px 26px rgba(124, 58, 237, 0.4);
 }
 
+/* .auth-submit as an <a> (e.g. "Continue to Homepage") instead of
+   a <button> — same look, needs width/centering spelled out since
+   it isn't a flex child of .auth-form. */
+.auth-link-button {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-align: center;
+}
+
+#verifyBlock { margin-bottom: 8px; }
+
 @media (max-width: 480px) {
   .auth-card { padding: 34px 24px 30px; }
   .auth-title { font-size: 1.45rem; }

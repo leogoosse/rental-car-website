@@ -76,7 +76,7 @@
             <input type="password" name="password" autocomplete="current-password" required placeholder="••••••••">
           </label>
 
-          <p class="auth-notice is-info" id="signinNotice" hidden data-i18n="auth.signinNotice">Sign-in isn't connected to an account system yet.</p>
+          <p class="auth-notice is-error" id="signinNotice" hidden></p>
 
           <button type="submit" class="auth-submit" data-i18n="auth.signinButton">Sign In</button>
         </form>
@@ -123,7 +123,31 @@
         <div class="auth-icon-check">✓</div>
         <h1 class="auth-title" data-i18n="auth.confirmTitle">Check Your Email</h1>
         <p class="auth-subtitle" id="confirmMessage">We've sent a confirmation link to your email. Click it to activate your account.</p>
+        <p class="auth-switch">
+          <button type="button" class="auth-link" id="resendVerify" data-i18n="auth.resendVerify">Resend verification email</button>
+        </p>
+        <p class="auth-notice is-info" id="resendNotice" hidden></p>
         <button type="button" class="auth-link" id="backToSignin" data-i18n="auth.backToSignin">Back to Sign In</button>
+      </div>
+
+      <!-- SIGNED-IN SESSION -->
+      <div class="auth-panel" id="accountPanel" hidden>
+        <div class="auth-icon-check">✓</div>
+        <h1 class="auth-title" data-i18n="auth.accountTitle">You're Signed In</h1>
+        <p class="auth-subtitle" id="accountEmail"></p>
+
+        <div id="verifyBlock" hidden>
+          <p class="auth-notice is-info" data-i18n="auth.verifyNotice">Please verify your email to complete your account.</p>
+          <p class="auth-switch">
+            <button type="button" class="auth-link" id="accountResendVerify" data-i18n="auth.resendVerify">Resend verification email</button>
+          </p>
+          <p class="auth-notice is-info" id="accountResendNotice" hidden></p>
+        </div>
+
+        <a href="index.html" class="auth-submit auth-link-button" data-i18n="auth.continueHome">Continue to Homepage</a>
+        <p class="auth-switch">
+          <button type="button" class="auth-link" id="signOutBtn" data-i18n="auth.signOut">Sign Out</button>
+        </p>
       </div>
 
     </section>
@@ -149,7 +173,6 @@
           'auth.signinButton': 'Sign In',
           'auth.noAccount': "Don't have an account?",
           'auth.createAccount': 'Create Account',
-          'auth.signinNotice': "Sign-in isn't connected to an account system yet.",
           'auth.eyebrowSignup': 'Join Atlas',
           'auth.signupTitle': 'Create Your Account',
           'auth.signupSubtitle': "Enter your email and choose a password — we'll send a confirmation link to verify it's you.",
@@ -162,6 +185,19 @@
           'auth.backToSignin': 'Back to Sign In',
           'auth.errorPasswordLength': 'Password must be at least 8 characters.',
           'auth.errorPasswordMatch': 'Passwords do not match.',
+          'auth.errorEmailInUse': 'That email is already registered — try signing in instead.',
+          'auth.errorInvalidEmail': 'Enter a valid email address.',
+          'auth.errorWeakPassword': 'Choose a stronger password (at least 6 characters).',
+          'auth.errorWrongCredentials': 'Incorrect email or password.',
+          'auth.errorTooMany': 'Too many attempts — please wait a moment and try again.',
+          'auth.errorNetwork': 'Network error — check your connection and try again.',
+          'auth.errorGeneric': 'Something went wrong — please try again.',
+          'auth.accountTitle': "You're Signed In",
+          'auth.verifyNotice': 'Please verify your email to complete your account.',
+          'auth.resendVerify': 'Resend verification email',
+          'auth.resendSent': "Verification email sent — check your inbox.",
+          'auth.continueHome': 'Continue to Homepage',
+          'auth.signOut': 'Sign Out',
           'meta.title': 'Sign In — Atlas'
         },
         es: {
@@ -179,7 +215,6 @@
           'auth.signinButton': 'Iniciar Sesión',
           'auth.noAccount': '¿No tienes una cuenta?',
           'auth.createAccount': 'Crear Cuenta',
-          'auth.signinNotice': 'El inicio de sesión aún no está conectado a un sistema de cuentas.',
           'auth.eyebrowSignup': 'Únete a Atlas',
           'auth.signupTitle': 'Crea Tu Cuenta',
           'auth.signupSubtitle': 'Ingresa tu correo y elige una contraseña — te enviaremos un enlace de confirmación.',
@@ -192,6 +227,19 @@
           'auth.backToSignin': 'Volver a Iniciar Sesión',
           'auth.errorPasswordLength': 'La contraseña debe tener al menos 8 caracteres.',
           'auth.errorPasswordMatch': 'Las contraseñas no coinciden.',
+          'auth.errorEmailInUse': 'Ese correo ya está registrado — intenta iniciar sesión.',
+          'auth.errorInvalidEmail': 'Ingresa un correo electrónico válido.',
+          'auth.errorWeakPassword': 'Elige una contraseña más segura (al menos 6 caracteres).',
+          'auth.errorWrongCredentials': 'Correo o contraseña incorrectos.',
+          'auth.errorTooMany': 'Demasiados intentos — espera un momento e intenta de nuevo.',
+          'auth.errorNetwork': 'Error de red — verifica tu conexión e intenta de nuevo.',
+          'auth.errorGeneric': 'Algo salió mal — intenta de nuevo.',
+          'auth.accountTitle': 'Has Iniciado Sesión',
+          'auth.verifyNotice': 'Verifica tu correo para completar tu cuenta.',
+          'auth.resendVerify': 'Reenviar correo de verificación',
+          'auth.resendSent': 'Correo de verificación reenviado — revisa tu bandeja de entrada.',
+          'auth.continueHome': 'Continuar al Inicio',
+          'auth.signOut': 'Cerrar Sesión',
           'meta.title': 'Iniciar Sesión — Atlas'
         }
       };
@@ -276,70 +324,192 @@
     })();
   </script>
 
-  <script>
-    // Sign in / create account panel switching + validation.
+  <script type="module">
+    // Real account creation, sign-in, and confirmation emails via
+    // Firebase Authentication (Email/Password provider).
     //
-    // NOTE — front-end only: this is a static site (GitHub Pages),
-    // so there's no server here to create accounts or send real
-    // confirmation emails. Wiring that up needs an auth backend
-    // (e.g. Firebase Auth or Supabase Auth) — see the conversation
-    // for next steps. Until then this form validates input and
-    // shows the intended end-state UI, but no email is actually
-    // sent and no account is actually created.
-    (function () {
-      const panels = {
-        signin: document.getElementById('signinPanel'),
-        signup: document.getElementById('signupPanel'),
-        confirm: document.getElementById('confirmPanel')
-      };
-      const t = () => (window.__atlasT || (k => k));
+    // The config below (apiKey etc.) is safe to expose client-side —
+    // that's how every Firebase web app ships. Access is controlled
+    // by the Authorized Domains list and Firebase's own security
+    // rules, not by hiding this object.
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-      function show(name) {
-        Object.values(panels).forEach(p => { p.hidden = true; });
-        panels[name].hidden = false;
+    const firebaseConfig = {
+      apiKey: "AIzaSyCysqRdUhhnlV_U_zg1EjklCSkxlbEej-Q",
+      authDomain: "atlas-rental-cars.firebaseapp.com",
+      projectId: "atlas-rental-cars",
+      storageBucket: "atlas-rental-cars.firebasestorage.app",
+      messagingSenderId: "477833703530",
+      appId: "1:477833703530:web:fe9b11026383336dbc1a13"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const panels = {
+      signin: document.getElementById('signinPanel'),
+      signup: document.getElementById('signupPanel'),
+      confirm: document.getElementById('confirmPanel'),
+      account: document.getElementById('accountPanel')
+    };
+    const t = (key) => (window.__atlasT ? window.__atlasT(key) : key);
+
+    function show(name) {
+      Object.values(panels).forEach(p => { p.hidden = true; });
+      panels[name].hidden = false;
+    }
+
+    document.getElementById('showSignup').addEventListener('click', () => show('signup'));
+    document.getElementById('showSignin').addEventListener('click', () => show('signin'));
+    document.getElementById('backToSignin').addEventListener('click', () => {
+      document.getElementById('signupForm').reset();
+      document.getElementById('signupError').hidden = true;
+      show('signin');
+    });
+
+    function authErrorMessage(error) {
+      switch (error.code) {
+        case 'auth/email-already-in-use': return t('auth.errorEmailInUse');
+        case 'auth/invalid-email': return t('auth.errorInvalidEmail');
+        case 'auth/weak-password': return t('auth.errorWeakPassword');
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential': return t('auth.errorWrongCredentials');
+        case 'auth/too-many-requests': return t('auth.errorTooMany');
+        case 'auth/network-request-failed': return t('auth.errorNetwork');
+        default: return t('auth.errorGeneric');
+      }
+    }
+
+    // Set right before a signup so the onAuthStateChanged listener
+    // below (which fires the instant Firebase auto-signs the new
+    // user in) doesn't jump straight to the account panel — we want
+    // the "check your email" screen first.
+    let suppressNextAuthRedirect = false;
+
+    // ── SIGN IN ──
+    const signinForm = document.getElementById('signinForm');
+    const signinNotice = document.getElementById('signinNotice');
+    const signinSubmit = signinForm.querySelector('.auth-submit');
+
+    signinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      signinNotice.hidden = true;
+      signinSubmit.disabled = true;
+      try {
+        await signInWithEmailAndPassword(auth, signinForm.email.value.trim(), signinForm.password.value);
+        signinForm.reset();
+      } catch (error) {
+        signinNotice.textContent = authErrorMessage(error);
+        signinNotice.hidden = false;
+      } finally {
+        signinSubmit.disabled = false;
+      }
+    });
+
+    // ── CREATE ACCOUNT ──
+    const signupForm = document.getElementById('signupForm');
+    const signupError = document.getElementById('signupError');
+    const signupSubmit = signupForm.querySelector('.auth-submit');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = signupForm.email.value.trim();
+      const password = signupForm.password.value;
+      const confirmPassword = signupForm.confirmPassword.value;
+
+      signupError.hidden = true;
+
+      if (password.length < 8) {
+        signupError.textContent = t('auth.errorPasswordLength');
+        signupError.hidden = false;
+        return;
+      }
+      if (password !== confirmPassword) {
+        signupError.textContent = t('auth.errorPasswordMatch');
+        signupError.hidden = false;
+        return;
       }
 
-      document.getElementById('showSignup').addEventListener('click', () => show('signup'));
-      document.getElementById('showSignin').addEventListener('click', () => show('signin'));
-      document.getElementById('backToSignin').addEventListener('click', () => {
-        document.getElementById('signupForm').reset();
-        document.getElementById('signupError').hidden = true;
-        show('signin');
-      });
-
-      const signinForm = document.getElementById('signinForm');
-      const signinNotice = document.getElementById('signinNotice');
-      signinForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        signinNotice.hidden = false;
-      });
-
-      const signupForm = document.getElementById('signupForm');
-      const signupError = document.getElementById('signupError');
-      signupForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = signupForm.email.value.trim();
-        const password = signupForm.password.value;
-        const confirmPassword = signupForm.confirmPassword.value;
-
-        signupError.hidden = true;
-
-        if (password.length < 8) {
-          signupError.textContent = t()('auth.errorPasswordLength');
-          signupError.hidden = false;
-          return;
-        }
-        if (password !== confirmPassword) {
-          signupError.textContent = t()('auth.errorPasswordMatch');
-          signupError.hidden = false;
-          return;
-        }
-
+      signupSubmit.disabled = true;
+      try {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        suppressNextAuthRedirect = true;
+        await sendEmailVerification(credential.user);
         document.getElementById('confirmMessage').textContent =
-          t()('auth.confirmMessage').replace('{email}', email);
+          t('auth.confirmMessage').replace('{email}', email);
+        signupForm.reset();
         show('confirm');
-      });
-    })();
+      } catch (error) {
+        signupError.textContent = authErrorMessage(error);
+        signupError.hidden = false;
+      } finally {
+        signupSubmit.disabled = false;
+      }
+    });
+
+    // ── RESEND VERIFICATION — from the "check your email" screen ──
+    const resendVerify = document.getElementById('resendVerify');
+    const resendNotice = document.getElementById('resendNotice');
+    resendVerify.addEventListener('click', async () => {
+      if (!auth.currentUser) return;
+      resendVerify.disabled = true;
+      try {
+        await sendEmailVerification(auth.currentUser);
+        resendNotice.textContent = t('auth.resendSent');
+      } catch (error) {
+        resendNotice.textContent = authErrorMessage(error);
+      } finally {
+        resendNotice.hidden = false;
+        resendVerify.disabled = false;
+      }
+    });
+
+    // ── SIGNED-IN SESSION ──
+    const accountEmail = document.getElementById('accountEmail');
+    const verifyBlock = document.getElementById('verifyBlock');
+    const accountResendVerify = document.getElementById('accountResendVerify');
+    const accountResendNotice = document.getElementById('accountResendNotice');
+
+    document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+
+    accountResendVerify.addEventListener('click', async () => {
+      if (!auth.currentUser) return;
+      accountResendVerify.disabled = true;
+      try {
+        await sendEmailVerification(auth.currentUser);
+        accountResendNotice.textContent = t('auth.resendSent');
+      } catch (error) {
+        accountResendNotice.textContent = authErrorMessage(error);
+      } finally {
+        accountResendNotice.hidden = false;
+        accountResendVerify.disabled = false;
+      }
+    });
+
+    // Drives the page on load (already signed in from a past visit),
+    // right after sign-in, and right after sign-out.
+    onAuthStateChanged(auth, (user) => {
+      if (suppressNextAuthRedirect) {
+        suppressNextAuthRedirect = false;
+        return;
+      }
+      if (user) {
+        accountEmail.textContent = user.email;
+        verifyBlock.hidden = user.emailVerified;
+        show('account');
+      } else if (panels.confirm.hidden) {
+        show('signin');
+      }
+    });
   </script>
 
 </body>
