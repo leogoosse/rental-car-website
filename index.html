@@ -42,6 +42,17 @@
     </div>
 
     <div class="nav-right">
+      <div class="lang-switch" role="group" aria-label="Language selector">
+        <button type="button" class="lang-option active" data-lang="en" aria-pressed="true">
+          <span class="lang-flag" aria-hidden="true">🇺🇸</span>
+          <span class="lang-code">EN</span>
+        </button>
+        <button type="button" class="lang-option" data-lang="es" aria-pressed="false">
+          <span class="lang-flag" aria-hidden="true">🇪🇸</span>
+          <span class="lang-code">ES</span>
+        </button>
+      </div>
+
       <a href="#" class="nav-profile">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round">
@@ -197,6 +208,26 @@
       window.scrollTo(0, 0);
       if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     });
+  </script>
+
+  <script>
+    // Language switcher — EN / ES toggle with flag icons.
+    // Purely presentational state for now (swaps the active pill);
+    // wire real translations in here once copy is localized.
+    (function () {
+      const options = Array.from(document.querySelectorAll('.lang-option'));
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          options.forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          document.documentElement.lang = btn.dataset.lang;
+        });
+      });
+    })();
   </script>
 
   <script>
